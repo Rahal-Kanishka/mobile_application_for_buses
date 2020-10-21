@@ -39,7 +39,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   List<LatLng> routeCoords = [];
   final Set<Polyline> polyLine = {};
   GoogleMapPolyline googleMapPolyline =
-      new GoogleMapPolyline(apiKey: "API_key");
+      new GoogleMapPolyline(apiKey: "AIzaSyDAOFWzuosZPkQZ6m4tFCUqzBtO1rVRAH4");
   GoogleMapController _controller;
   BusRoute selectedBusRoute;
   // 154
@@ -71,13 +71,13 @@ class _HomeWidgetState extends State<HomeWidget> {
     // initiate data
     busStations_100[1] = [LatLng(6.716216, 79.907538),LatLng(6.724812, 79.906620), LatLng(6.750239, 79.900306)]; // Panadura to Pettah
     busStations_100[2] = [LatLng(6.9671920, 79.894041),LatLng(6.967234, 79.900681), LatLng(6.974128, 79.921958)]; // Pettah to Panadura
-    busStations_101[1] = [LatLng(6.967194, 79.906330),LatLng(6.967110, 79.900765), LatLng(6.961823, 79.894262)]; // Moratuwa to Pettah
+    busStations_101[1] = [LatLng(6.780459, 79.883247),LatLng(6.790203, 79.885856), LatLng(6.8333174, 79.867266)]; // Moratuwa to Pettah
     busStations_101[2] = [LatLng(6.9671920, 79.894041),LatLng(6.967234, 79.900681), LatLng(6.974128, 79.921958)]; // Pettah to Moratuwa
     busStations_154[1] = [LatLng(6.967194, 79.906330),LatLng(6.967110, 79.900765), LatLng(6.961823, 79.894262)]; // kiribathgoda to Agulana
     busStations_154[2] = [LatLng(6.9671920, 79.894041),LatLng(6.967234, 79.900681), LatLng(6.974128, 79.921958)]; // Agulana to kiribathgoda
     BusRoute busRoute_154 = new BusRoute('154 Kiribathgoda - Agulana', LatLng(6.979248, 79.930212), LatLng(6.804479, 79.886325), 1, busStations_154);
     BusRoute busRoute_100 = new BusRoute('100 Panadura - Pettah', LatLng(6.711797, 79.907597), LatLng(6.933934, 79.850132), 1, busStations_100);
-    BusRoute busRoute_101 = new BusRoute('101 Moratuwa - Pettah', LatLng(6.979248, 79.930212), LatLng(6.933934, 79.850132), 1, busStations_101);
+    BusRoute busRoute_101 = new BusRoute('101 Moratuwa - Pettah', LatLng(6.774401, 79.882734), LatLng(6.933934, 79.850132), 1, busStations_101);
     busRoutesList = [busRoute_100,busRoute_101,busRoute_154];
   }
 
