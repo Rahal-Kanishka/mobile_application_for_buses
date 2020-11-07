@@ -3,14 +3,31 @@ import 'dart:collection';
 // import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_with_maps/pages/driver_home.dart';
+import 'package:flutter_with_maps/pages/welcome.dart';
 import 'package:google_map_polyline/google_map_polyline.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission/permission.dart';
+import 'package:http/http.dart' as http;
+import 'package:global_configuration/global_configuration.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: HomeWidget(),
-  ));
+void main() async {
+  try{
+    WidgetsFlutterBinding.ensureInitialized();
+    var json = await GlobalConfiguration().loadFromPath('assets/cfg/configurations.json');
+    print(json);
+    runApp(MaterialApp(
+      initialRoute: '/welcome',
+      routes: {
+        '/home': (context) => HomeWidget(),
+        '/welcome': (context) => Welcome(),
+        '/driver': (context) => DriverHome(),
+      },
+    ));
+  }catch(e){
+    throw Exception(e.toString());
+  }
 }
 
 class Destination {
@@ -39,7 +56,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   List<LatLng> routeCoords = [];
   final Set<Polyline> polyLine = {};
   GoogleMapPolyline googleMapPolyline =
-      new GoogleMapPolyline(apiKey: "AIzaSyDAOFWzuosZPkQZ6m4tFCUqzBtO1rVRAH4");
+      new GoogleMapPolyline(apiKey: GlobalConfiguration().getValue("api_key"));
   GoogleMapController _controller;
   BusRoute selectedBusRoute;
   // 154
@@ -47,6 +64,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   Map< int, List<LatLng>> busStations_100 = new HashMap<int, List<LatLng>>();
   Map< int, List<LatLng>> busStations_101 = new HashMap<int, List<LatLng>>();
   List<BusRoute> busRoutesList = [];
+  String endPoint;
 
   @override
   void initState() {
@@ -68,6 +86,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
     ));
     getSomePoints();
+    endPoint = GlobalConfiguration().getValue("backend_url");
     // initiate data
     busStations_100[1] = [LatLng(6.716216, 79.907538),LatLng(6.724812, 79.906620), LatLng(6.750239, 79.900306)]; // Panadura to Pettah
     busStations_100[2] = [LatLng(6.9671920, 79.894041),LatLng(6.967234, 79.900681), LatLng(6.974128, 79.921958)]; // Pettah to Panadura
@@ -131,7 +150,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   getSomePoints() async {
     var permissions =
-        await Permission.getPermissionsStatus([PermissionName.Location]);
+        await Permission.getPermissionsStatus([PermissionName.Location, PermissionName.Internet]);
     if (permissions[0].permissionStatus == PermissionStatus.notAgain) {
       var askPermissions =
           await Permission.requestPermissions([PermissionName.Location]);
@@ -141,6 +160,21 @@ class _HomeWidgetState extends State<HomeWidget> {
           destination: LatLng(6.796744, 79.888338),
           mode: RouteMode.driving);
     }
+  }
+
+  getData() async {
+    final response = await http.get(endPoint+'/login');
+
+    if(response.statusCode == 200){
+      print(response.body);
+      return response.body;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  void onButtonPress() {
+    getData();
   }
 
   @override
@@ -171,6 +205,10 @@ class _HomeWidgetState extends State<HomeWidget> {
                   style: new TextStyle(color: Colors.black)),
             );
           }).toList(),
+        ),
+        RaisedButton(
+          child: Text('Click Button'),
+          onPressed: onButtonPress,
         ),
         Expanded(
           child: Container(

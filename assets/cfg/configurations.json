@@ -1,0 +1,5 @@
+{
+  "backend_url": "http://192.168.1.5:3000",
+  "login": "/login",
+  "api_key": "copy it from whatsApp group"
+}
