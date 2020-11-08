@@ -51,7 +51,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/bus_image.png
+   - assets/images/
    - assets/cfg/
 
 
