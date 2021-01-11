@@ -22,7 +22,7 @@ class _WelcomeState extends State<Welcome> {
           Container(
               padding: new EdgeInsets.all(10.0),
               color: Colors.red,
-              height: MediaQuery.of(context).size.height / 2 - 45,
+              height: MediaQuery.of(context).size.height / 2,
               width: MediaQuery.of(context).size.width,
               child: IconButton(
                 onPressed: () {
