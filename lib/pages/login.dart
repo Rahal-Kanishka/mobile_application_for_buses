@@ -14,7 +14,7 @@ class _LoginState extends State<Login> {
         centerTitle: true,
       ),
       body: Container(
-          color: Colors.blue[300],
+          color: Colors.white,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height / 2,
           child: ListView(shrinkWrap: true, children: <Widget>[
@@ -43,7 +43,9 @@ class _LoginState extends State<Login> {
               child: RaisedButton(
                   color: Colors.blue[200],
                   child: Text('Register'),
-                  onPressed: () {}),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/register');
+                  }),
             )
           ])),
     );
