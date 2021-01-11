@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_with_maps/pages/complaint.dart';
 import 'package:flutter_with_maps/pages/driver_home.dart';
+import 'package:flutter_with_maps/pages/login.dart';
 import 'package:flutter_with_maps/pages/user_profile.dart';
 import 'package:flutter_with_maps/pages/welcome.dart';
 import 'package:google_map_polyline/google_map_polyline.dart';
@@ -30,6 +31,7 @@ void main() async {
         '/driver': (context) => DriverHome(),
         '/complaint': (context) => Complaint(),
         '/user': (context) => UserProfile(),
+        '/login': (context) => Login(),
       },
     ));
   } catch (e) {

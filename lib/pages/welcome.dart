@@ -34,7 +34,7 @@ class _WelcomeState extends State<Welcome> {
           Container(
               padding: new EdgeInsets.all(10.0),
               color: Colors.blue,
-              height: MediaQuery.of(context).size.height / 2 - 45,
+              height: MediaQuery.of(context).size.height / 2,
               width: MediaQuery.of(context).size.width,
               child: IconButton(
                 onPressed: () {
@@ -65,7 +65,15 @@ class _WelcomeState extends State<Welcome> {
                 onTap: () => print('SECOND CHILD'),
                 label: 'Settings',
                 labelStyle: TextStyle(fontWeight: FontWeight.w500),
-                labelBackgroundColor: Colors.green)
+                labelBackgroundColor: Colors.green
+            ),
+            SpeedDialChild(
+                child: Icon(Icons.settings, color: Colors.white),
+                backgroundColor: Colors.lightBlueAccent,
+                onTap: () => Navigator.pushNamed(context, '/login'),
+                label: 'Login',
+                labelStyle: TextStyle(fontWeight: FontWeight.w500),
+                labelBackgroundColor: Colors.lightBlueAccent)
           ]),
     );
   }
