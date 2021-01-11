@@ -21,10 +21,13 @@ class _ComplaintState extends State<Complaint> {
             TextField(
               maxLines: 8,
               decoration: InputDecoration.collapsed(
-                  hintText: "Enter your complaint here.."),
+                  hintText: "Enter your complaint here..",
+                  border: OutlineInputBorder()),
             ),
             RaisedButton(
-                color: Colors.blue[200], child: Text('Submit'), onPressed: () {})
+                color: Colors.blue[200],
+                child: Text('Submit'),
+                onPressed: () {})
           ],
         ),
       ),
