@@ -55,7 +55,7 @@ class _DriverHomeState extends State<DriverHome> {
           children: <Widget>[
             Container(
                 padding: new EdgeInsets.all(10.0),
-                color: Colors.red,
+                color: Colors.white,
                 height: MediaQuery.of(context).size.height / 2 - 45,
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
@@ -63,7 +63,7 @@ class _DriverHomeState extends State<DriverHome> {
                   children: <Widget>[
                     Container(
                       padding: new EdgeInsets.all(10.0),
-                      color: Colors.blue,
+                      color: Colors.white,
                       width: MediaQuery.of(context).size.width / 2 - 10,
                       alignment: Alignment.center,
                       child: Column(
@@ -72,30 +72,30 @@ class _DriverHomeState extends State<DriverHome> {
                         children: <Widget>[
                           Container(
                             child: Text('Name:   ${driver.name}'),
-                            color: Colors.grey[100],
+                            color: Colors.white,
                           ),
                           Container(
                             child: Text('Age: ${driver.age.toString()}'),
-                            color: Colors.grey[200],
+                            color: Colors.white,
                           ),
                           Container(
                             child: Text('Nationality:   ${driver.nationality}'),
-                            color: Colors.grey[300],
+                            color: Colors.white,
                           ),
                           Container(
                             child: Text('Trips: ${driver.trips?.toString()}'),
-                            color: Colors.grey[500],
+                            color: Colors.white,
                           ),
                           Container(
                             child: Text('Rating: ${driver.rating}'),
-                            color: Colors.grey[500],
+                            color: Colors.white,
                           ),
                         ],
                       ),
                     ),
                     Container(
                         padding: new EdgeInsets.all(10.0),
-                        color: Colors.yellow,
+                        color: Colors.white,
                         height: MediaQuery.of(context).size.height / 2 - 60,
                         width: MediaQuery.of(context).size.width / 2 - 30,
                         child: FittedBox(
@@ -107,12 +107,39 @@ class _DriverHomeState extends State<DriverHome> {
                 )),
             Container(
                 padding: new EdgeInsets.all(10.0),
-                color: Colors.blue,
-                height: MediaQuery.of(context).size.height / 2 - 45,
+                color: Colors.blue[300],
+                height: MediaQuery.of(context).size.height / 2 - 43,
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.center,
-                child: Row(
+                child: Column(
                   children: <Widget>[
+                    Container(
+                        width: MediaQuery.of(context).size.width - 20,
+                        height: MediaQuery.of(context).size.height / 4,
+                        padding: new EdgeInsets.all(10.0),
+                        color: Colors.indigoAccent[100],
+                        alignment: Alignment.topLeft,
+                        child: Column(
+                          children: <Widget>[
+                            Text('Next Schedule'),
+                            RichText(
+                                text: TextSpan(children: [
+                              TextSpan(text: 'Start at '),
+                              TextSpan(
+                                  text: '3.00 P.M',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 50)),
+                            ])),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Text('Start: Panadura'),
+                                Text('End: Pettah'),
+                              ],
+                            )
+                          ],
+                        )),
                     Container(
                       width: MediaQuery.of(context).size.width - 20,
                       padding: new EdgeInsets.all(10.0),
@@ -120,7 +147,7 @@ class _DriverHomeState extends State<DriverHome> {
                         onPressed: () {},
                         child: Text('Start Driving'),
                       ),
-                      color: Colors.deepPurpleAccent,
+                      color: Colors.indigoAccent[100],
                     ),
                   ],
                 )),
