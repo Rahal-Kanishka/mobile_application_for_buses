@@ -65,7 +65,14 @@ class _WelcomeState extends State<Welcome> {
                 onTap: () => Navigator.pushNamed(context, '/login'),
                 label: 'Login',
                 labelStyle: TextStyle(fontWeight: FontWeight.w500),
-                labelBackgroundColor: Colors.lightBlueAccent)
+                labelBackgroundColor: Colors.lightBlueAccent),
+            SpeedDialChild(
+                child: Icon(Icons.app_registration, color: Colors.white),
+                backgroundColor: Colors.redAccent[200],
+                onTap: () => Navigator.pushNamed(context, '/register'),
+                label: 'Register',
+                labelStyle: TextStyle(fontWeight: FontWeight.w500),
+                labelBackgroundColor: Colors.redAccent[200])
           ]),
     );
   }

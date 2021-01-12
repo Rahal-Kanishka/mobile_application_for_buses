@@ -20,6 +20,7 @@ class _RegisterState extends State<Register> {
     new UserType('Driver', Icon(Icons.train_rounded))
   ];
   UserType selectedUserType;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -35,75 +36,113 @@ class _RegisterState extends State<Register> {
           title: Text('Register'),
           centerTitle: true,
         ),
-        body: Container(
-            color: Colors.white,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: ListView(shrinkWrap: true, children: <Widget>[
-              Container(
+        body: Form(
+          key: _formKey,
+          child: Container(
+              color: Colors.white,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: ListView(shrinkWrap: true, children: <Widget>[
+                Container(
+                    padding: new EdgeInsets.all(10.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          icon: const Icon(Icons.perm_contact_cal_sharp),
+                          border: OutlineInputBorder(),
+                          hintText: 'Enter your First Name...',
+                          labelText: 'First Name'),
+                    )),
+                Container(
+                    padding: new EdgeInsets.all(10.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          icon: const Icon(Icons.person),
+                          border: OutlineInputBorder(),
+                          hintText: 'Enter your Last Name...',
+                          labelText: 'Last Name'),
+                    )),
+                Container(
+                    padding: new EdgeInsets.all(10.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          icon: const Icon(Icons.email),
+                          border: OutlineInputBorder(),
+                          hintText: 'Enter your email...',
+                          labelText: 'email'),
+                    )),
+                Container(
+                    padding: new EdgeInsets.all(10.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          icon: const Icon(Icons.phone),
+                          border: OutlineInputBorder(),
+                          hintText: 'Enter your Contact Number...',
+                          labelText: 'Contact'),
+                    )),
+                Container(
+                    padding: new EdgeInsets.all(10.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          icon: const Icon(Icons.home_filled),
+                          border: OutlineInputBorder(),
+                          hintText: 'Enter your Address...',
+                          labelText: 'Address'),
+                    )),
+                Container(
                   padding: new EdgeInsets.all(10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), hintText: 'First Name'),
-                  )),
-              Container(
-                  padding: new EdgeInsets.all(10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), hintText: 'Last Name'),
-                  )),
-              Container(
-                  padding: new EdgeInsets.all(10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), hintText: 'email'),
-                  )),
-              Container(
-                  padding: new EdgeInsets.all(10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), hintText: 'contact'),
-                  )),
-              Container(
-                  padding: new EdgeInsets.all(10.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), hintText: 'address'),
-                  )),
-              Container(
-                padding: new EdgeInsets.all(10.0),
-                child: new DropdownButton(
-                  hint: new Text("select user type"),
-                  value: selectedUserType,
-                  onChanged: (UserType newValue) {
-                    setState(() {
-                      selectedUserType = newValue;
-                    });
-                  },
-                  items: userTypeList.map((UserType value) {
-                    return new DropdownMenuItem<UserType>(
-                      value: value,
-                      child: Row(
-                        children: [
-                          value.typeIcon,
-                          Container(
-                            padding: new EdgeInsets.all(10.0),
-                            child: new Text(value.typeName,
-                                style: new TextStyle(color: Colors.black)),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                  child: new DropdownButton(
+                    hint: new Text("select user type"),
+                    value: selectedUserType,
+                    onChanged: (UserType newValue) {
+                      setState(() {
+                        selectedUserType = newValue;
+                      });
+                    },
+                    items: userTypeList.map((UserType value) {
+                      return new DropdownMenuItem<UserType>(
+                        value: value,
+                        child: Row(
+                          children: [
+                            value.typeIcon,
+                            Container(
+                              padding: new EdgeInsets.all(10.0),
+                              child: new Text(value.typeName,
+                                  style: new TextStyle(color: Colors.black)),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
-              ),
-              Container(
-                padding: new EdgeInsets.all(10.0),
-                child: RaisedButton(
-                    color: Colors.redAccent[200],
-                    child: Text('Register'),
-                    onPressed: () {}),
-              ),
-            ])));
+                Container(
+                    padding: new EdgeInsets.all(10.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          icon: const Icon(Icons.security),
+                          border: OutlineInputBorder(),
+                          hintText: 'Enter your password...',
+                          labelText: 'Password'),
+                      obscureText: true,
+                    )),
+                Container(
+                    padding: new EdgeInsets.all(10.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          icon: const Icon(Icons.security),
+                          border: OutlineInputBorder(),
+                          hintText: 'Enter your confirm password...',
+                          labelText: 'Confirm Password'),
+                      obscureText: true,
+                    )),
+                Container(
+                  padding: new EdgeInsets.all(10.0),
+                  child: RaisedButton(
+                      color: Colors.redAccent[200],
+                      child: Text('Register'),
+                      onPressed: () {}),
+                )
+              ])),
+        ));
   }
 }

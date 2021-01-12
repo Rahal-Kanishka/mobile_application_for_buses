@@ -16,32 +16,37 @@ class _LoginState extends State<Login> {
       body: Container(
           color: Colors.white,
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 2,
           child: ListView(shrinkWrap: true, children: <Widget>[
             Container(
                 padding: new EdgeInsets.all(10.0),
                 child: TextField(
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(), hintText: 'enter username'),
+                      icon: const Icon(Icons.email),
+                      border: OutlineInputBorder(),
+                      hintText: 'enter username',
+                      labelText: 'UserName'),
                 )),
             Container(
                 padding: new EdgeInsets.all(10.0),
                 child: TextField(
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(), hintText: 'Enter password'),
+                      icon: const Icon(Icons.vpn_key_sharp),
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter password',
+                      labelText: 'Password'),
                   obscureText: true,
                 )),
             Container(
               padding: new EdgeInsets.all(10.0),
               child: RaisedButton(
-                  color: Colors.redAccent[200],
+                  color: Colors.blue[200],
                   child: Text('Login'),
                   onPressed: () {}),
             ),
             Container(
               padding: new EdgeInsets.all(10.0),
               child: RaisedButton(
-                  color: Colors.blue[200],
+                  color: Colors.redAccent[200],
                   child: Text('Register'),
                   onPressed: () {
                     Navigator.pushNamed(context, '/register');
