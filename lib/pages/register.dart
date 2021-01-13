@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_with_maps/models/SaveUser.dart';
+import 'package:flutter_with_maps/models/user.dart';
 import 'package:flutter_with_maps/models/UserType.dart';
 import 'package:http/http.dart' as http;
 import 'package:global_configuration/global_configuration.dart';
@@ -19,7 +19,7 @@ class _RegisterState extends State<Register> {
   String endPoint;
   UserType selectedUserType;
   final _formKey = GlobalKey<FormState>();
-  SaveUser userModel = new SaveUser();
+  User userModel = new User();
 
   @override
   void initState() {

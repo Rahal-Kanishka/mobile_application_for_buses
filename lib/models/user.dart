@@ -1,6 +1,6 @@
 import 'package:flutter_with_maps/models/UserType.dart';
 
-class SaveUser {
+class User {
   String firstName,
       lastName,
       email,
@@ -11,7 +11,7 @@ class SaveUser {
 
   UserType type;
 
-  SaveUser(
+  User(
       {this.firstName,
       this.lastName,
       this.email,
