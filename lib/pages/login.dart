@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_with_maps/common/user_session.dart';
 import 'package:flutter_with_maps/models/user.dart';
 import 'package:flutter_with_maps/util/backend.dart';
 import 'package:global_configuration/global_configuration.dart';
@@ -106,6 +107,7 @@ class _LoginState extends State<Login> {
       BackEndResult result =
           await BackEnd.postRequest(dataObject, '/user/login');
       if (result != null && result.statusCode == 200) {
+        UserSession().jwtToken = result.responseBody['token'];
         return ['User login Successfully',result.statusCode];
       } else {
         return [result.responseBody['data'][0]['msg'],result.statusCode];

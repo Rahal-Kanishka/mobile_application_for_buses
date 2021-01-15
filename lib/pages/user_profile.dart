@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_with_maps/util/backend.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 
@@ -166,14 +167,9 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   void getUserProfileData() async {
-    var json = await GlobalConfiguration()
-        .loadFromPath('assets/cfg/configurations.json');
-    endPoint = GlobalConfiguration().getValue("backend_url");
-
-    final response = await http.get(endPoint + '/user/rahal_user');
-
-    if (response.statusCode == 200) {
-      var userData = jsonDecode(response.body);
+    BackEndResult backEndResult = await BackEnd.getRequest('/user/rahal_user');
+    if (backEndResult.statusCode == 200) {
+      var userData = backEndResult.responseBody;
       print(userData);
       setState(() {
         user = User.fromJson(userData);
