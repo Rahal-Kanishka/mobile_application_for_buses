@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_with_maps/common/user_session.dart';
 import 'package:http/http.dart' as http;
 import 'package:global_configuration/global_configuration.dart';
 
@@ -162,7 +163,7 @@ class _DriverHomeState extends State<DriverHome> {
   void getDriverData() async {
     var json = await GlobalConfiguration()
         .loadFromPath('assets/cfg/configurations.json');
-    endPoint = GlobalConfiguration().getValue("backend_url");
+    /*endPoint = GlobalConfiguration().getValue("backend_url");
 
     final response = await http.get(endPoint + '/driver/rahal_1');
 
@@ -174,6 +175,15 @@ class _DriverHomeState extends State<DriverHome> {
       });
     } else {
       throw Exception('Failed to load data');
-    }
+    }*/
+    setState(() {
+      var myDriver = new Driver(null);
+      var currentUser = UserSession().currentUser;
+      if(currentUser!= null){
+        myDriver.name = currentUser.firstName + ' ' + currentUser.lastName;
+        myDriver.userName = currentUser.email;
+        driver = myDriver;
+      }
+    });
   }
 }

@@ -108,6 +108,7 @@ class _LoginState extends State<Login> {
           await BackEnd.postRequest(dataObject, '/user/login');
       if (result != null && result.statusCode == 200) {
         UserSession().jwtToken = result.responseBody['token'];
+        UserSession().currentUser = User.fromJson(result.responseBody['data']);
         return ['User login Successfully',result.statusCode];
       } else {
         return [result.responseBody['data'][0]['msg'],result.statusCode];
