@@ -5,10 +5,12 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_with_maps/pages/bus_selection.dart';
 import 'package:flutter_with_maps/pages/complaint.dart';
-import 'package:flutter_with_maps/pages/driver_home.dart';
+import 'package:flutter_with_maps/pages/driver/driver_home.dart';
 import 'package:flutter_with_maps/pages/login.dart';
 import 'package:flutter_with_maps/pages/register.dart';
+import 'package:flutter_with_maps/pages/user/userPanel.dart';
 import 'package:flutter_with_maps/pages/user_profile.dart';
 import 'package:flutter_with_maps/pages/welcome.dart';
 import 'package:google_map_polyline/google_map_polyline.dart';
@@ -25,7 +27,7 @@ void main() async {
     print(json);
     runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/welcome',
+      initialRoute: '/user_panel',
       routes: {
         '/home': (context) => HomeWidget(),
         '/welcome': (context) => Welcome(),
@@ -34,6 +36,8 @@ void main() async {
         '/user': (context) => UserProfile(),
         '/login': (context) => Login(),
         '/register': (context) => Register(),
+        '/select_bus': (context) => BusSelection(),
+        '/user_panel': (context) => UserPanel(),
       },
     ));
   } catch (e) {

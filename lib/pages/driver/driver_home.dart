@@ -144,7 +144,9 @@ class _DriverHomeState extends State<DriverHome> {
                       width: MediaQuery.of(context).size.width - 20,
                       padding: new EdgeInsets.all(10.0),
                       child: RaisedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/select_bus');
+                        },
                         child: Text('Start Driving'),
                       ),
                       color: Colors.indigoAccent[100],
