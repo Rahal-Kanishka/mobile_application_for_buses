@@ -8,6 +8,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_with_maps/pages/bus_selection.dart';
 import 'package:flutter_with_maps/pages/complaint.dart';
 import 'package:flutter_with_maps/pages/driver/driver_home.dart';
+import 'package:flutter_with_maps/pages/driver/driver_navigate.dart';
 import 'package:flutter_with_maps/pages/login.dart';
 import 'package:flutter_with_maps/pages/register.dart';
 import 'package:flutter_with_maps/pages/user/userPanel.dart';
@@ -38,6 +39,7 @@ void main() async {
         '/register': (context) => Register(),
         '/select_bus': (context) => BusSelection(),
         '/user_panel': (context) => UserPanel(),
+        '/driver_navigate': (context) => DriverNavigation(),
       },
     ));
   } catch (e) {
@@ -271,6 +273,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: GoogleMap(
+                padding: EdgeInsets.only(bottom: 80, right: 10),
                 onMapCreated: onMapCreated,
                 polylines: polyLine,
                 initialCameraPosition:

@@ -145,7 +145,7 @@ class _DriverHomeState extends State<DriverHome> {
                       padding: new EdgeInsets.all(10.0),
                       child: RaisedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/select_bus');
+                          Navigator.pushNamed(context, '/driver_navigate');
                         },
                         child: Text('Start Driving'),
                       ),
