@@ -41,6 +41,22 @@ class _DriverNavigationState extends State<DriverNavigation> {
         title: Text('Driver Navigation'),
         centerTitle: true,
       ),
+      body: Column(children: [
+        Expanded(
+          child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: GoogleMap(
+                padding: EdgeInsets.only(bottom: 80, right: 10),
+                onMapCreated: null,
+                polylines: polyLine,
+                initialCameraPosition:
+                CameraPosition(target: LatLng(6.7881, 79.8913), zoom: 12.0),
+                markers: Set.from(markersList),
+                mapType: MapType.normal,
+              )),
+        )
+      ]),
     );
   }
 }
