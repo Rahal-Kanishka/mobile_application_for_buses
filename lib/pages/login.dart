@@ -84,6 +84,8 @@ class _LoginState extends State<Login> {
                               controller.reset();
                               if(value[2]['type']['name'] == 'Driver') {
                                 this.navigateToDriverHome();
+                              } else if(value[2]['type']['name'] == 'General') {
+                                this.navigateToUserPanel();
                               } else {
                                 this.navigateToWelcome();
                               }
@@ -134,5 +136,9 @@ class _LoginState extends State<Login> {
 
   void navigateToDriverHome(){
     Navigator.pushNamed(context, '/driver');
+  }
+
+  void navigateToUserPanel(){
+    Navigator.pushNamed(context, '/user_panel');
   }
 }
