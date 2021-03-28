@@ -29,6 +29,7 @@ dependencies:
   http:
   global_configuration: ^1.6.0
   flutter_speed_dial: ^1.0.9
+  progress_indicator_button: ^0.0.3
 
 
   # The following adds the Cupertino Icons font to your application.

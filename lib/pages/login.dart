@@ -3,6 +3,7 @@ import 'package:flutter_with_maps/common/user_session.dart';
 import 'package:flutter_with_maps/models/user.dart';
 import 'package:flutter_with_maps/util/backend.dart';
 import 'package:global_configuration/global_configuration.dart';
+import 'package:progress_indicator_button/progress_button.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -67,28 +68,37 @@ class _LoginState extends State<Login> {
                           })),
                   Container(
                       padding: new EdgeInsets.all(10.0),
-                      child: RaisedButton(
+                      child: ProgressButton(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        strokeWidth: 2,
                         color: Colors.blue[200],
                         child: Text('Login'),
-                        onPressed: () {
-                          this.login().then((value) {
+                        onPressed: (AnimationController controller) {
+                          this.login(controller).then((value) {
                             if (value != null && value[0].isNotEmpty) {
                               final snackBar = SnackBar(content: Text(value[0]));
                               Scaffold.of(buildContext).showSnackBar(snackBar);
                             }
-                            if(value[1] == 200){
+                            if(value != null && value[1] == 200){
                               // if success
-                              this.navigateToWelcome();
+                              controller.reset();
+                              if(value[2]['type']['name'] == 'Driver') {
+                                this.navigateToDriverHome();
+                              } else {
+                                this.navigateToWelcome();
+                              }
                             }
                           });
                         },
                       )),
                   Container(
                     padding: new EdgeInsets.all(10.0),
-                    child: RaisedButton(
+                    child: ProgressButton(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        strokeWidth: 2,
                         color: Colors.redAccent[200],
                         child: Text('Register'),
-                        onPressed: () {
+                        onPressed: (AnimationController controller) {
                           Navigator.pushNamed(context, '/register');
                         }),
                   )
@@ -97,8 +107,9 @@ class _LoginState extends State<Login> {
         }));
   }
 
-  Future<dynamic> login() async {
+  Future<dynamic> login(AnimationController controller) async {
     if (this._formKey.currentState.validate()) {
+      controller.forward(); // start loading icon
       this._formKey.currentState.save();
       Map<String, dynamic> dataObject = {
         'userName': this.loginUser.email,
@@ -109,8 +120,9 @@ class _LoginState extends State<Login> {
       if (result != null && result.statusCode == 200) {
         UserSession().jwtToken = result.responseBody['token'];
         UserSession().currentUser = User.fromJson(result.responseBody['data']);
-        return ['User login Successfully',result.statusCode];
+        return ['User login Successfully',result.statusCode, result.responseBody['data']];
       } else {
+        controller.reset(); // stop loading icon
         return [result.responseBody['data'][0]['msg'],result.statusCode];
       }
     }
@@ -118,5 +130,9 @@ class _LoginState extends State<Login> {
 
   void navigateToWelcome(){
     Navigator.pushNamed(context, '/welcome');
+  }
+
+  void navigateToDriverHome(){
+    Navigator.pushNamed(context, '/driver');
   }
 }
