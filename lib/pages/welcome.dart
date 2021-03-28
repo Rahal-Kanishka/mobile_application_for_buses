@@ -54,7 +54,7 @@ class _WelcomeState extends State<Welcome> {
             SpeedDialChild(
               child: Icon(Icons.assignment_ind_outlined, color: Colors.white),
               backgroundColor: Colors.deepOrange,
-              onTap: () => print('FIRST CHILD'),
+              onTap: () => Navigator.pushNamed(context, '/about_us'),
               label: 'About Us',
               labelStyle: TextStyle(fontWeight: FontWeight.w500),
               labelBackgroundColor: Colors.deepOrangeAccent,

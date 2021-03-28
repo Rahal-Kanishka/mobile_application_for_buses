@@ -5,6 +5,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_with_maps/pages/about_us.dart';
 import 'package:flutter_with_maps/pages/bus_selection.dart';
 import 'package:flutter_with_maps/pages/complaint.dart';
 import 'package:flutter_with_maps/pages/driver/driver_home.dart';
@@ -40,6 +41,7 @@ void main() async {
         '/select_bus': (context) => BusSelection(),
         '/user_panel': (context) => UserPanel(),
         '/driver_navigate': (context) => DriverNavigation(),
+        '/about_us': (context) => AboutUs(),
       },
     ));
   } catch (e) {
