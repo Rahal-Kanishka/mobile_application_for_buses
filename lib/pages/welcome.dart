@@ -22,16 +22,16 @@ class _WelcomeState extends State<Welcome> {
           Container(
               padding: new EdgeInsets.all(10.0),
               color: Colors.red,
-              height: MediaQuery.of(context).size.height / 2,
+              height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: IconButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/home');
                 },
                 color: Colors.amber[100],
-                icon: new Icon(Icons.supervised_user_circle, size: 60.0),
+                icon: new Icon(Icons.subway_outlined, size: 60.0),
               )),
-          Container(
+          /*Container(
               padding: new EdgeInsets.all(10.0),
               color: Colors.blue,
               height: MediaQuery.of(context).size.height / 2,
@@ -42,7 +42,7 @@ class _WelcomeState extends State<Welcome> {
                 },
                 color: Colors.cyan[100],
                 icon: new Icon(Icons.directions_bus, size: 60.0),
-              )),
+              )),*/
         ]),
       ),
       floatingActionButton: SpeedDial(
