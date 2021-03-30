@@ -11,4 +11,5 @@ class UserSession {
 
   User currentUser;
   String jwtToken;
+  bool isLoggedIn = false;
 }

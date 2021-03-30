@@ -29,7 +29,7 @@ void main() async {
     print(json);
     runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/user_panel',
+      initialRoute: '/welcome',
       routes: {
         '/home': (context) => HomeWidget(),
         '/welcome': (context) => Welcome(),

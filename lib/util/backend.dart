@@ -26,17 +26,25 @@ class BackEnd {
   }
 
   /// common post request with a body
-  static Future<BackEndResult> postRequest(
-      Map<String, dynamic> dataObject, String requestPath) async {
+  static Future<BackEndResult> postRequest(Map<String, dynamic> dataObject,
+      String requestPath) async {
     var json = await GlobalConfiguration()
         .loadFromPath('assets/cfg/configurations.json');
     var endPoint = GlobalConfiguration().getValue("backend_url");
     var url = endPoint + requestPath;
     Map<String, String> headers = generateHeaders();
-
-    final response =
-        await http.post(url, headers: headers, body: jsonEncode(dataObject));
-    return new BackEndResult(response.statusCode, jsonDecode(response.body));
+    var response;
+    var backEndResult;
+    try {
+      response =
+      await http.post(url, headers: headers, body: jsonEncode(dataObject));
+      backEndResult =
+          BackEndResult(response.statusCode, jsonDecode(response.body));
+    } catch (e) {
+      print('error in post: $e');
+      backEndResult = new BackEndResult(null, e.toString());
+    }
+    return backEndResult;
   }
 
   ///common get request with query params

@@ -165,13 +165,19 @@ class _UserPanel extends State<UserPanel> {
                 child: Icon(Icons.logout, color: Colors.white),
                 backgroundColor: Colors.deepOrange,
                 onTap: () {
-                  print('FIRST CHILD');
                   Navigator.pushNamed(context, '/welcome');
                 },
                 label: 'Log out',
                 labelStyle: TextStyle(fontWeight: FontWeight.w500),
                 labelBackgroundColor: Colors.deepOrangeAccent,
-              )
+              ),
+              SpeedDialChild(
+                  child: Icon(Icons.app_registration, color: Colors.white),
+                  backgroundColor: Colors.redAccent[200],
+                  onTap: () => Navigator.pushNamed(context, '/register'),
+                  label: 'Register',
+                  labelStyle: TextStyle(fontWeight: FontWeight.w500),
+                  labelBackgroundColor: Colors.redAccent[200])
             ]));
   }
 }

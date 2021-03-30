@@ -76,10 +76,11 @@ class _LoginState extends State<Login> {
                         onPressed: (AnimationController controller) {
                           this.login(controller).then((value) {
                             if (value != null && value[0].isNotEmpty) {
+                              controller.reset();
                               final snackBar = SnackBar(content: Text(value[0]));
                               Scaffold.of(buildContext).showSnackBar(snackBar);
                             }
-                            if(value != null && value[1] == 200){
+                            if(value != null && value.length > 1 && value[1] == 200){
                               // if success
                               controller.reset();
                               if(value[2]['type']['name'] == 'Driver') {
@@ -122,10 +123,18 @@ class _LoginState extends State<Login> {
       if (result != null && result.statusCode == 200) {
         UserSession().jwtToken = result.responseBody['token'];
         UserSession().currentUser = User.fromJson(result.responseBody['data']);
-        return ['User login Successfully',result.statusCode, result.responseBody['data']];
+        UserSession().isLoggedIn = true;
+        return [
+          'User login Successfully',
+          result.statusCode,
+          result.responseBody['data']
+        ];
+      } else if (result.statusCode == null) {
+        // when the connection fails
+        return ['Connection Error!'];
       } else {
         controller.reset(); // stop loading icon
-        return [result.responseBody['data'][0]['msg'],result.statusCode];
+        return [result.responseBody['data'][0]['msg'], result.statusCode];
       }
     }
   }
