@@ -5,6 +5,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_with_maps/common/user_session.dart';
 import 'package:flutter_with_maps/pages/about_us.dart';
 import 'package:flutter_with_maps/pages/bus_selection.dart';
 import 'package:flutter_with_maps/pages/complaint.dart';
@@ -290,24 +291,43 @@ class _HomeWidgetState extends State<HomeWidget> {
           animatedIconTheme: IconThemeData(size: 22.0),
           curve: Curves.bounceIn,
           backgroundColor: Colors.lightBlueAccent,
-          children: [
-            SpeedDialChild(
-              child: Icon(Icons.assignment_ind_outlined, color: Colors.white),
-              backgroundColor: Colors.deepOrange,
-              onTap: () => Navigator.pushNamed(context, '/user'),
-              label: 'Profile',
-              labelStyle: TextStyle(fontWeight: FontWeight.w500),
-              labelBackgroundColor: Colors.deepOrangeAccent,
-            ),
-            SpeedDialChild(
-                child: Icon(Icons.settings, color: Colors.white),
-                backgroundColor: Colors.green,
-                onTap: () => Navigator.pushNamed(context, '/complaint'),
-                label: 'Complaints',
-                labelStyle: TextStyle(fontWeight: FontWeight.w500),
-                labelBackgroundColor: Colors.green)
-          ]),
+          children: this.getSpeedDials()),
     );
+  }
+
+  /// get speedDials based on user authentication details
+  List<SpeedDialChild> getSpeedDials() {
+    List<SpeedDialChild> speedDials = new List.of([
+      SpeedDialChild(
+        child: Icon(Icons.assignment_ind_outlined, color: Colors.white),
+        backgroundColor: Colors.deepOrange,
+        onTap: () => Navigator.pushNamed(context, '/about_us'),
+        label: 'About Us',
+        labelStyle: TextStyle(fontWeight: FontWeight.w500),
+        labelBackgroundColor: Colors.deepOrangeAccent,
+      )
+    ]);
+
+    if (UserSession().isLoggedIn) {
+      speedDials.addAll([
+        SpeedDialChild(
+          child: Icon(Icons.assignment_ind_outlined, color: Colors.white),
+          backgroundColor: Colors.lightBlueAccent,
+          onTap: () => Navigator.pushNamed(context, '/user'),
+          label: 'Profile',
+          labelStyle: TextStyle(fontWeight: FontWeight.w500),
+          labelBackgroundColor: Colors.lightBlueAccent,
+        ),
+        SpeedDialChild(
+            child: Icon(Icons.settings, color: Colors.white),
+            backgroundColor: Colors.green,
+            onTap: () => Navigator.pushNamed(context, '/complaint'),
+            label: 'Complaints',
+            labelStyle: TextStyle(fontWeight: FontWeight.w500),
+            labelBackgroundColor: Colors.green)
+      ]);
+    }
+    return speedDials;
   }
 
   void onMapCreated(GoogleMapController controller) {

@@ -165,7 +165,7 @@ class _UserPanel extends State<UserPanel> {
                 child: Icon(Icons.logout, color: Colors.white),
                 backgroundColor: Colors.deepOrange,
                 onTap: () {
-                  Navigator.pushNamed(context, '/welcome');
+                  Navigator.pushNamed(context, '/login');
                 },
                 label: 'Log out',
                 labelStyle: TextStyle(fontWeight: FontWeight.w500),
