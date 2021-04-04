@@ -16,11 +16,15 @@ import 'package:flutter_with_maps/pages/register.dart';
 import 'package:flutter_with_maps/pages/user/userPanel.dart';
 import 'package:flutter_with_maps/pages/user_profile.dart';
 import 'package:flutter_with_maps/pages/welcome.dart';
+import 'package:flutter_with_maps/util/backend.dart';
+import 'package:flutter_with_maps/util/common.dart';
 import 'package:google_map_polyline/google_map_polyline.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission/permission.dart';
 import 'package:http/http.dart' as http;
 import 'package:global_configuration/global_configuration.dart';
+
+import 'common/basic_alert.dart';
 
 void main() async {
   try {
@@ -58,6 +62,7 @@ class Destination {
 }
 
 class BusRoute {
+  final String id;
   final String routeNumber;
   final LatLng start;
   final LatLng end;
@@ -65,7 +70,7 @@ class BusRoute {
   final Map<int, List<LatLng>>
       busStations; // index 1 - bus halts on 1st journey
 
-  BusRoute(this.routeNumber, this.start, this.end, this.journeyStep,
+  BusRoute(this.id, this.routeNumber, this.start, this.end, this.journeyStep,
       this.busStations);
 }
 
@@ -77,11 +82,16 @@ class HomeWidget extends StatefulWidget {
 class _HomeWidgetState extends State<HomeWidget> {
   List<Marker> markersList = [];
   List<LatLng> routeCoords = [];
+  List<LatLng> driverJourneyMarkersList = [];
   final Set<Polyline> polyLine = {};
   GoogleMapPolyline googleMapPolyline =
       new GoogleMapPolyline(apiKey: GlobalConfiguration().getValue("api_key"));
   GoogleMapController _controller;
   BusRoute selectedBusRoute;
+  Timer timer;
+  var alertDialog;
+  Marker driverMarker;
+  BitmapDescriptor driverIcon;
 
   // 154
   Map<int, List<LatLng>> busStations_154 = new HashMap<int, List<LatLng>>();
@@ -94,9 +104,12 @@ class _HomeWidgetState extends State<HomeWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    Common.getBytesFromAsset("assets/images/bus_start_2.png", 100).then((onValue) {
+      driverIcon = BitmapDescriptor.fromBytes(onValue);
+    });
     markersList.add(Marker(
       markerId: MarkerId(
-        'Katubeddha busholt',
+        'Katubeddha bus-halt',
       ),
       draggable: false,
       onTap: () {
@@ -143,24 +156,107 @@ class _HomeWidgetState extends State<HomeWidget> {
       LatLng(6.974128, 79.921958)
     ]; // Agulana to kiribathgoda
     BusRoute busRoute_154 = new BusRoute(
+        null,
         '154 Kiribathgoda - Agulana',
         LatLng(6.979248, 79.930212),
         LatLng(6.804479, 79.886325),
         1,
         busStations_154);
     BusRoute busRoute_100 = new BusRoute(
+        '6004830b0027e4132e2cd39a',
         '100 Panadura - Pettah',
         LatLng(6.711797, 79.907597),
         LatLng(6.933934, 79.850132),
         1,
         busStations_100);
     BusRoute busRoute_101 = new BusRoute(
+        '6008f9a8986ab2208f701dd3',
         '101 Moratuwa - Pettah',
         LatLng(6.774401, 79.882734),
         LatLng(6.933934, 79.850132),
         1,
         busStations_101);
     busRoutesList = [busRoute_100, busRoute_101, busRoute_154];
+  }
+
+  void dispose() {
+    super.dispose();
+    if (timer != null) {
+      timer.cancel();
+    }
+  }
+
+  Future<void> updateDriverLocation(BuildContext context, String routeID) async {
+    int count = 0;
+    driverJourneyMarkersList = [];
+    setState(() {});
+    if (timer != null) {
+      timer.cancel(); // close existing time calls
+    } else {
+      timer = Timer.periodic(Duration(seconds: 15),
+          (Timer t) => getDriverRealTimeLocation(count++, context, routeID));
+    }
+  }
+
+  Future<void> getDriverRealTimeLocation(
+      int count, BuildContext context, String routeID) async {
+    Map<String, String> queryParams = {
+      'route_id': routeID,
+      'count': count.toString(),
+    };
+    BackEndResult backEndResult =
+        await BackEnd.getRequest('/driver/driver_location', queryParams);
+    var driverNewLocation;
+    if (backEndResult.statusCode == 200 && backEndResult.responseBody != null) {
+      driverNewLocation = LatLng.fromJson([
+        backEndResult.responseBody['lat'],
+        backEndResult.responseBody['lng']
+      ]);
+      print('count: ' + count.toString());
+      print(driverNewLocation);
+      driverJourneyMarkersList.add(driverNewLocation);
+      // setting up the bus route
+      Polyline polyline = new Polyline(
+          polylineId: new PolylineId("driver_path"),
+          points: driverJourneyMarkersList,
+          geodesic: true,
+          width: 5,
+          color: Colors.blue
+      );
+      polyLine.add(polyline);
+      if (driverMarker != null) {
+        // if marker is already exists, remove it and add a new marker
+        markersList.removeWhere((marker) => marker.markerId == "driver position");
+      }
+      setState(() {});
+      driverMarker = new Marker(
+        markerId: MarkerId("driver position"),
+        draggable: false,
+        onTap: () {
+          print('bus holt selected');
+        },
+        position: driverNewLocation,
+        infoWindow: InfoWindow(
+          title: 'Bus Driver',
+          snippet: '101, 100, 2',
+        ),
+        icon: driverIcon,
+      );
+      markersList.add(driverMarker);
+      setState(() {});
+    } else {
+      alertDialog = new BasicAlert(
+          "Error Occurred",
+          "error occurred in getting Driver location?",
+          "Confirm",
+          "Cancel",
+          () {},
+          () {},
+          true);
+      showDialog(
+          context: context, builder: (BuildContext context) => alertDialog);
+      setState(() {});
+    }
   }
 
   void updateMarker(BusRoute busRoute) {
@@ -227,21 +323,6 @@ class _HomeWidgetState extends State<HomeWidget> {
     }
   }
 
-  getData() async {
-    final response = await http.get(endPoint + '/login');
-
-    if (response.statusCode == 200) {
-      print(response.body);
-      return response.body;
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
-
-  void onButtonPress() {
-    getData();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -262,6 +343,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               // update bus halts in the map
               updateMarker(newValue);
             });
+            updateDriverLocation(context, newValue.id);
           },
           items: busRoutesList.map((BusRoute value) {
             return new DropdownMenuItem<BusRoute>(
