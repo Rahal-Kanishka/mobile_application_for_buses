@@ -48,14 +48,22 @@ class BackEnd {
   }
 
   ///common get request with query params
-  static Future<BackEndResult> getRequest(String requestPath) async {
+  static Future<BackEndResult> getRequest(String requestPath,
+      [Map<String, String> queryParams]) async {
     var json = await GlobalConfiguration()
         .loadFromPath('assets/cfg/configurations.json');
     var endPoint = GlobalConfiguration().getValue("backend_url");
-    var url = endPoint + requestPath;
+    var url;
+    if(queryParams != null) {
+      String queryString = Uri(queryParameters: queryParams).query;
+      url = endPoint + requestPath + '?' + queryString;
+    } else {
+      url = endPoint + requestPath;
+    }
     Map<String, String> headers = generateHeaders();
 
     final response = await http.get(url, headers: headers);
-    return new BackEndResult(response.statusCode, jsonDecode(response.body));
+    return new BackEndResult(response.statusCode,
+        response.body != null && response.body != "" ? jsonDecode(response.body) : null);
   }
 }

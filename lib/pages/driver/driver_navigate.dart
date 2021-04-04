@@ -70,7 +70,10 @@ class _DriverNavigationState extends State<DriverNavigation> {
   }
 
   void getRouteAndBusStopsData() async {
-    BackEndResult backEndResult = await BackEnd.getRequest('/route/100 Moratuwa Pettah');
+    Map<String, String> queryParams = {
+      'id': '6004830b0027e4132e2cd39a',
+    };
+    BackEndResult backEndResult = await BackEnd.getRequest('/route/route_by_id', queryParams);
     int count = 0;
     if (backEndResult.statusCode == 200) {
       this.busRoute = BusRoute.fromJson(backEndResult.responseBody);
