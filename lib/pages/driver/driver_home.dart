@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_with_maps/common/user_session.dart';
+import 'package:flutter_with_maps/models/DriverProfile.dart';
+import 'package:flutter_with_maps/models/user.dart';
+import 'package:flutter_with_maps/util/backend.dart';
 import 'package:http/http.dart' as http;
 import 'package:global_configuration/global_configuration.dart';
 
@@ -33,6 +36,7 @@ class DriverHome extends StatefulWidget {
 class _DriverHomeState extends State<DriverHome> {
   String endPoint;
   Driver driver = new Driver(null);
+  DriverProfile driverProfile;
 
   @override
   void initState() {
@@ -76,19 +80,15 @@ class _DriverHomeState extends State<DriverHome> {
                             color: Colors.white,
                           ),
                           Container(
-                            child: Text('Age: ${driver.age.toString()}'),
+                            child: Text('Trips: ${driverProfile != null ? driverProfile.trips?.toString() : 'N/A'}'),
                             color: Colors.white,
                           ),
                           Container(
-                            child: Text('Nationality:   ${driver.nationality}'),
+                            child: Text('Rating: ${driverProfile != null ? driverProfile.rating : 'N/A'}'),
                             color: Colors.white,
                           ),
                           Container(
-                            child: Text('Trips: ${driver.trips?.toString()}'),
-                            color: Colors.white,
-                          ),
-                          Container(
-                            child: Text('Rating: ${driver.rating}'),
+                            child: Text('Max Ratings:   ${driverProfile != null ? driverProfile.maxRatings : 'N/A'}'),
                             color: Colors.white,
                           ),
                         ],
@@ -163,6 +163,7 @@ class _DriverHomeState extends State<DriverHome> {
   void getDriverData() async {
     var json = await GlobalConfiguration()
         .loadFromPath('assets/cfg/configurations.json');
+    var currentUser = UserSession().currentUser;
     /*endPoint = GlobalConfiguration().getValue("backend_url");
 
     final response = await http.get(endPoint + '/driver/rahal_1');
@@ -176,13 +177,18 @@ class _DriverHomeState extends State<DriverHome> {
     } else {
       throw Exception('Failed to load data');
     }*/
+    Map<String, String> driverProfileQueryParams = {
+      'driver_id': currentUser.id
+    };
+    BackEndResult driverProfileData =
+    await BackEnd.getRequest('/driver/driver_profile', driverProfileQueryParams);
     setState(() {
       var myDriver = new Driver(null);
-      var currentUser = UserSession().currentUser;
       if(currentUser!= null){
         myDriver.name = currentUser.firstName + ' ' + currentUser.lastName;
         myDriver.userName = currentUser.email;
         driver = myDriver;
+        driverProfile = DriverProfile.fromJson(driverProfileData.responseBody);
       }
     });
   }
