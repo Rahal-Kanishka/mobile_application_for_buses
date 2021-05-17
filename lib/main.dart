@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_with_maps/common/user_session.dart';
+import 'package:flutter_with_maps/models/DriverProfile.dart';
+import 'package:flutter_with_maps/models/user.dart';
 import 'package:flutter_with_maps/pages/about_us.dart';
 import 'package:flutter_with_maps/pages/bus_selection.dart';
 import 'package:flutter_with_maps/pages/complaint.dart';
@@ -14,7 +16,7 @@ import 'package:flutter_with_maps/pages/driver/driver_navigate.dart';
 import 'package:flutter_with_maps/pages/login.dart';
 import 'package:flutter_with_maps/pages/register.dart';
 import 'package:flutter_with_maps/pages/user/userPanel.dart';
-import 'package:flutter_with_maps/pages/user_profile.dart';
+import 'package:flutter_with_maps/pages/user_profile.dart' as UserProfile;
 import 'package:flutter_with_maps/pages/welcome.dart';
 import 'package:flutter_with_maps/util/backend.dart';
 import 'package:flutter_with_maps/util/common.dart';
@@ -40,7 +42,7 @@ void main() async {
         '/welcome': (context) => Welcome(),
         '/driver': (context) => DriverHome(),
         '/complaint': (context) => Complaint(),
-        '/user': (context) => UserProfile(),
+        '/user': (context) => UserProfile.UserProfile(),
         '/login': (context) => Login(),
         '/register': (context) => Register(),
         '/select_bus': (context) => BusSelection(),
@@ -189,17 +191,28 @@ class _HomeWidgetState extends State<HomeWidget> {
   Future<void> updateDriverLocation(BuildContext context, String routeID) async {
     int count = 0;
     driverJourneyMarkersList = [];
+    // get driver profile data
+    String driverID = "606aae33085ad53d3c6f9097";
+    Map<String, String> driverProfileQueryParams = {
+      'driver_id': driverID
+    };
+    BackEndResult driverProfileData =
+    await BackEnd.getRequest('/driver/driver_profile', driverProfileQueryParams);
+    DriverProfile driverProfile = DriverProfile.fromJson(driverProfileData.responseBody);
+    User driverUser =  (await Common.getUserDetails(driverID));
     setState(() {});
     if (timer != null) {
       timer.cancel(); // close existing time calls
     } else {
       timer = Timer.periodic(Duration(seconds: 15),
-          (Timer t) => getDriverRealTimeLocation(count++, context, routeID));
+          (Timer t) => getDriverRealTimeLocation(
+            count++, context, routeID, driverProfile, driverUser));
     }
   }
 
   Future<void> getDriverRealTimeLocation(
-      int count, BuildContext context, String routeID) async {
+      int count, BuildContext context, String routeID,
+      DriverProfile driverProfile, User driverUser) async {
     Map<String, String> queryParams = {
       'route_id': routeID,
       'count': count.toString(),
@@ -233,7 +246,8 @@ class _HomeWidgetState extends State<HomeWidget> {
         markerId: MarkerId("driver position"),
         draggable: false,
         onTap: () {
-          print('bus holt selected');
+          print('driver location');
+          this.showDriverDetailsInBottomSheet(context, driverProfile, driverUser);
         },
         position: driverNewLocation,
         infoWindow: InfoWindow(
@@ -374,6 +388,96 @@ class _HomeWidgetState extends State<HomeWidget> {
           curve: Curves.bounceIn,
           backgroundColor: Colors.lightBlueAccent,
           children: this.getSpeedDials()),
+    );
+  }
+
+  /// show the drivers info in the bottom of the view
+  void showDriverDetailsInBottomSheet(BuildContext context,
+      DriverProfile driverProfile, User driverUser) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 200,
+          color: Colors.black12,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                padding: new EdgeInsets.all(10.0),
+                 child: Text(driverUser != null
+                      ? driverUser.firstName + ' ' + driverUser.lastName
+                      : 'N/A',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20
+                    ))
+              ),
+              Container(
+                  padding: new EdgeInsets.all(5.0),
+                  child: new RichText(
+                    text: new TextSpan(
+                      // Note: Styles for TextSpans must be explicitly defined.
+                      // Child text spans will inherit styles from parent
+                      style: new TextStyle(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                      ),
+                      children: <TextSpan>[
+                        new TextSpan(text: 'Contact: '),
+                        new TextSpan(
+                            text: driverUser.contact,
+                            style: new TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  )),
+              Container(
+                  padding: new EdgeInsets.all(5.0),
+                  child: new RichText(
+                    text: new TextSpan(
+                      // Note: Styles for TextSpans must be explicitly defined.
+                      // Child text spans will inherit styles from parent
+                      style: new TextStyle(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                      ),
+                      children: <TextSpan>[
+                        new TextSpan(text: 'Rating: '),
+                        new TextSpan(
+                            text: driverProfile.rating,
+                            style: new TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  )),
+              Container(
+                  padding: new EdgeInsets.all(5.0),
+                  child: new RichText(
+                    text: new TextSpan(
+                      // Note: Styles for TextSpans must be explicitly defined.
+                      // Child text spans will inherit styles from parent
+                      style: new TextStyle(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                      ),
+                      children: <TextSpan>[
+                        new TextSpan(text: 'Trips: '),
+                        new TextSpan(
+                            text: driverProfile.trips.toString(),
+                            style: new TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  )),
+              ElevatedButton(
+                child: new Text('Close'),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          ),
+
+        );
+      },
     );
   }
 
