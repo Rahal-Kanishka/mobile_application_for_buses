@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert' as convert;
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_with_maps/common/basic_alert.dart';
 import 'package:flutter_with_maps/common/user_session.dart';
 import 'package:flutter_with_maps/models/DriverPosition.dart';
 import 'package:flutter_with_maps/models/DriverProfile.dart';
@@ -58,6 +60,8 @@ class _DriverNavigationState extends State<DriverNavigation> {
   CameraPosition _cameraPosition = CameraPosition(target: LatLng(6.7881, 79.8913), zoom: 18.0);
   DriverProfile driverProfile;
   String driverID = UserSession().currentUser.id;
+  List<StreamSubscription> _subscriptions = [];
+  var alertDialog;
 
   @override
   void initState() {
@@ -67,15 +71,23 @@ class _DriverNavigationState extends State<DriverNavigation> {
     // get location access permission from device user
     getDriverDeviceLocationPermission();
     // get driver information from database
-    getDriverDetails(driverID);
+    getDriverDetailsAndStartJourney(driverID);
     setSourceAndDestinationIcons();
     // load bus route data from backend
     getRouteAndBusStopsData();
   }
 
-  Future<void> getDriverDetails(String driverID) async {
+  @override
+  void dispose() {
+    this.stopDriving();
+    super.dispose();
+  }
+
+  Future<void> getDriverDetailsAndStartJourney(String driverID) async {
     // find the driver profile
      driverProfile =  (await Common.getDriverProfile(driverID));
+     // change journey status in database
+     this.changeJourneyStatus(true);
   }
 
   Future<void> getDriverDeviceLocationPermission() async {
@@ -103,7 +115,7 @@ class _DriverNavigationState extends State<DriverNavigation> {
 
     _locationData = await location.getLocation();
 
-    location.onLocationChanged
+    var locationSubscription = location.onLocationChanged
         .listen((locationPackage.LocationData currentLocation) async {
       // Use current location
       print('current location lat: ' +
@@ -129,6 +141,13 @@ class _DriverNavigationState extends State<DriverNavigation> {
       setState(() {
         this.plotDriverPath();
       });
+    });
+    _subscriptions.add(locationSubscription);
+  }
+
+  void cancelSubscriptions() {
+    _subscriptions.forEach((subscription) {
+      subscription.cancel();
     });
   }
 
@@ -299,6 +318,26 @@ class _DriverNavigationState extends State<DriverNavigation> {
     );
     _polylines.add(polyline);
   }
+
+  Future<void> stopDriving() async {
+    // to stop listening to location change service
+    cancelSubscriptions();
+    // update database
+    await this.changeJourneyStatus(false);
+  }
+
+  //update database with start or end of the journey
+  changeJourneyStatus(bool journeyStatus) async {
+    Map<String, dynamic> driverLocationDataObject = {
+      'driver_id': driverID,
+      'route_id':  driverProfile.routeID,
+      'journey_status': journeyStatus
+    };
+    print('driverData: '+ convert.jsonEncode(driverLocationDataObject));
+    BackEndResult backEndResult = await BackEnd.putRequest(
+        driverLocationDataObject, '/driver/journey_status');
+
+  }
   
 
   @override
@@ -324,6 +363,46 @@ class _DriverNavigationState extends State<DriverNavigation> {
               )),
         )
       ]),
+      floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.menu_home,
+          animatedIconTheme: IconThemeData(size: 22.0),
+          curve: Curves.bounceIn,
+          backgroundColor: Colors.lightBlueAccent,
+          children: this.getSpeedDials(context)),
     );
   }
+
+  List<SpeedDialChild> getSpeedDials(BuildContext context) {
+    List<SpeedDialChild> speedDials = new List.of([
+      SpeedDialChild(
+        child: Icon(Icons.cancel, color: Colors.white),
+        backgroundColor: Colors.deepOrange,
+        onTap: () {
+          showEndJourneyConfirmation(context);
+        },
+        label: 'END Journey',
+        labelStyle: TextStyle(fontWeight: FontWeight.w500),
+        labelBackgroundColor: Colors.deepOrangeAccent,
+      )
+    ]);
+    return speedDials;
+  }
+
+  showEndJourneyConfirmation(BuildContext context) {
+    alertDialog = new BasicAlert(
+        "END Journey", "Do you want to END the Journey?", "Confirm", "Cancel",
+        () async {
+      await stopDriving();
+      //route to drive start page
+      Navigator.pushNamed(context, '/driver');
+    }, () {
+          // to close the alert dialog
+      Navigator.pop(context, true);
+    });
+
+    showDialog(
+        context: context, builder: (BuildContext context) => alertDialog);
+  }
 }
+
+
