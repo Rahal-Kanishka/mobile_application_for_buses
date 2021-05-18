@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:convert' as convert;
+import 'package:flutter_with_maps/common/user_session.dart';
 import 'package:flutter_with_maps/models/DriverPosition.dart';
+import 'package:flutter_with_maps/models/DriverProfile.dart';
+import 'package:flutter_with_maps/util/common.dart';
 import 'package:location/location.dart' as locationPackage;
 import 'dart:typed_data';
 import 'dart:ui';
@@ -52,6 +56,8 @@ class _DriverNavigationState extends State<DriverNavigation> {
   BitmapDescriptor driverStart;
   BitmapDescriptor driverCurrent;
   CameraPosition _cameraPosition = CameraPosition(target: LatLng(6.7881, 79.8913), zoom: 18.0);
+  DriverProfile driverProfile;
+  String driverID = UserSession().currentUser.id;
 
   @override
   void initState() {
@@ -60,10 +66,16 @@ class _DriverNavigationState extends State<DriverNavigation> {
     endPoint = GlobalConfiguration().getValue("backend_url");
     // get location access permission from device user
     getDriverDeviceLocationPermission();
-
+    // get driver information from database
+    getDriverDetails(driverID);
     setSourceAndDestinationIcons();
     // load bus route data from backend
     getRouteAndBusStopsData();
+  }
+
+  Future<void> getDriverDetails(String driverID) async {
+    // find the driver profile
+     driverProfile =  (await Common.getDriverProfile(driverID));
   }
 
   Future<void> getDriverDeviceLocationPermission() async {
@@ -92,16 +104,21 @@ class _DriverNavigationState extends State<DriverNavigation> {
     _locationData = await location.getLocation();
 
     location.onLocationChanged
-        .listen((locationPackage.LocationData currentLocation) {
+        .listen((locationPackage.LocationData currentLocation) async {
       // Use current location
-      print('current location: ' +
-          currentLocation.toString() +
+      print('current location lat: ' +
+          currentLocation.latitude.toString() +
+          ' lng: ' +
+          currentLocation.longitude.toString() +
           ' speed: ' +
           currentLocation.speed.toString() +
           ' accuracy: ' +
           currentLocation.accuracy.toString() +
           ' direction: ' +
           currentLocation.heading.toString());
+
+      //update database with real time location data
+      await updateDatabaseWithLocationData(currentLocation, driverID, driverProfile.routeID);
 
       this.driverJourneyPositionMarkers
           .add(LatLng(currentLocation.latitude, currentLocation.longitude));
@@ -113,6 +130,24 @@ class _DriverNavigationState extends State<DriverNavigation> {
         this.plotDriverPath();
       });
     });
+  }
+
+  Future updateDatabaseWithLocationData(
+      locationPackage.LocationData currentLocation,
+      String driverID,
+      String routeID) async {
+    //update database with real time location data
+    Map<String, dynamic> driverLocationDataObject = {
+      'driver_id': driverID,
+      'route_id': routeID,
+      'lat': currentLocation.latitude.toString(),
+      'lng': currentLocation.longitude.toString(),
+      'speed': currentLocation.speed.toString(),
+      'rotation': currentLocation.heading.toString(),
+    };
+    print('driverData: '+ convert.jsonEncode(driverLocationDataObject));
+    BackEndResult backEndResult = await BackEnd.putRequest(
+        driverLocationDataObject, '/driver/driver_location');
   }
 
   void plotDriverPath() {
@@ -285,6 +320,7 @@ class _DriverNavigationState extends State<DriverNavigation> {
                 initialCameraPosition: _cameraPosition,
                 markers: _markers,
                 mapType: MapType.normal,
+                mapToolbarEnabled: true,
               )),
         )
       ]),

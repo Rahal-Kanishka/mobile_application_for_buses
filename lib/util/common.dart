@@ -4,7 +4,9 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_with_maps/models/DriverProfile.dart';
 import 'package:flutter_with_maps/models/user.dart';
+import 'package:flutter_with_maps/pages/driver/driver_home.dart';
 
 import 'backend.dart';
 
@@ -30,5 +32,14 @@ class Common {
     } else {
       return null;
     }
+  }
+
+  static Future<DriverProfile> getDriverProfile(String driverID) async {
+    Map<String, String> driverProfileQueryParams = {'driver_id': driverID};
+    BackEndResult driverProfileData = await BackEnd.getRequest(
+        '/driver/driver_profile', driverProfileQueryParams);
+    DriverProfile driverProfile =
+        DriverProfile.fromJson(driverProfileData.responseBody);
+    return driverProfile;
   }
 }

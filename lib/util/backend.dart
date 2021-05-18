@@ -47,6 +47,35 @@ class BackEnd {
     return backEndResult;
   }
 
+  /// common put request with a body
+  static Future<BackEndResult> putRequest(Map<String, dynamic> dataObject,
+      String requestPath) async {
+    var json = await GlobalConfiguration()
+        .loadFromPath('assets/cfg/configurations.json');
+    var endPoint = GlobalConfiguration().getValue("backend_url");
+    var url = endPoint + requestPath;
+    Map<String, String> headers = generateHeaders();
+    var response;
+    var backEndResult;
+    try {
+      response =
+      await http.put(url, headers: headers, body: jsonEncode(dataObject));
+      if(response != null) {
+        if(response.body != "") {
+          backEndResult =
+              BackEndResult(response.statusCode, jsonDecode(response.body));
+        } else {
+          backEndResult = new BackEndResult(null, null);
+        }
+      }
+
+    } catch (e) {
+      print('error in post: $e');
+      backEndResult = new BackEndResult(null, e.toString());
+    }
+    return backEndResult;
+  }
+
   ///common get request with query params
   static Future<BackEndResult> getRequest(String requestPath,
       [Map<String, String> queryParams]) async {
