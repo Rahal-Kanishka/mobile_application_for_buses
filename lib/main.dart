@@ -398,84 +398,54 @@ class _HomeWidgetState extends State<HomeWidget> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 200,
-          color: Colors.black12,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
+          color: Colors.white54,
+          padding: new EdgeInsets.all(10.0),
+          child: ListView(
+            shrinkWrap: true,
             children: <Widget>[
-              Container(
-                padding: new EdgeInsets.all(10.0),
-                 child: Text(driverUser != null
-                      ? driverUser.firstName + ' ' + driverUser.lastName
-                      : 'N/A',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20
-                    ))
+              Column(
+                children: [
+                  ListTile(
+                    leading: new Icon(Icons.person),
+                    title: new Text(driverUser.firstName + ' ' + driverUser.lastName),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: new Icon(Icons.star),
+                    title: new Text(driverProfile.rating),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: new Icon(Icons.card_travel),
+                    title: new Text(driverProfile.trips.toString()),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               ),
-              Container(
-                  padding: new EdgeInsets.all(5.0),
-                  child: new RichText(
-                    text: new TextSpan(
-                      // Note: Styles for TextSpans must be explicitly defined.
-                      // Child text spans will inherit styles from parent
-                      style: new TextStyle(
-                        fontSize: 15.0,
-                        color: Colors.black,
-                      ),
-                      children: <TextSpan>[
-                        new TextSpan(text: 'Contact: '),
-                        new TextSpan(
-                            text: driverUser.contact,
-                            style: new TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  )),
-              Container(
-                  padding: new EdgeInsets.all(5.0),
-                  child: new RichText(
-                    text: new TextSpan(
-                      // Note: Styles for TextSpans must be explicitly defined.
-                      // Child text spans will inherit styles from parent
-                      style: new TextStyle(
-                        fontSize: 15.0,
-                        color: Colors.black,
-                      ),
-                      children: <TextSpan>[
-                        new TextSpan(text: 'Rating: '),
-                        new TextSpan(
-                            text: driverProfile.rating,
-                            style: new TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  )),
-              Container(
-                  padding: new EdgeInsets.all(5.0),
-                  child: new RichText(
-                    text: new TextSpan(
-                      // Note: Styles for TextSpans must be explicitly defined.
-                      // Child text spans will inherit styles from parent
-                      style: new TextStyle(
-                        fontSize: 15.0,
-                        color: Colors.black,
-                      ),
-                      children: <TextSpan>[
-                        new TextSpan(text: 'Trips: '),
-                        new TextSpan(
-                            text: driverProfile.trips.toString(),
-                            style: new TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  )),
-              ElevatedButton(
-                child: new Text('Close'),
-                onPressed: () => Navigator.pop(context),
-              )
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                      padding: new EdgeInsets.all(10.0),
+                      color: Colors.white,
+                      height: MediaQuery.of(context).size.height / 2 - 60,
+                      width: MediaQuery.of(context).size.width / 2 - 30,
+                      child: FittedBox(
+                          child: Image.asset(
+                            'assets/images/driver_pic.jpg',
+                            fit: BoxFit.contain,
+                          )))
+                ],
+              ),
             ],
           ),
-
         );
       },
     );
