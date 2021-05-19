@@ -85,9 +85,9 @@ class _DriverNavigationState extends State<DriverNavigation> {
 
   Future<void> getDriverDetailsAndStartJourney(String driverID) async {
     // find the driver profile
-     driverProfile =  (await Common.getDriverProfile(driverID));
-     // change journey status in database
-     this.changeJourneyStatus(true);
+    driverProfile = (await Common.getDriverProfile(driverID));
+    // change journey status in database
+    this.changeJourneyStatus(true);
   }
 
   Future<void> getDriverDeviceLocationPermission() async {

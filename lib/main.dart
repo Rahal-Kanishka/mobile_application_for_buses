@@ -9,6 +9,8 @@ import 'package:flutter_with_maps/common/user_session.dart';
 import 'package:flutter_with_maps/models/DriverProfile.dart';
 import 'package:flutter_with_maps/models/user.dart';
 import 'package:flutter_with_maps/pages/about_us.dart';
+import 'package:flutter_with_maps/pages/admin/admin_panel.dart';
+import 'package:flutter_with_maps/pages/admin/user_list_table.dart';
 import 'package:flutter_with_maps/pages/bus_selection.dart';
 import 'package:flutter_with_maps/pages/complaint.dart';
 import 'package:flutter_with_maps/pages/driver/driver_home.dart';
@@ -49,6 +51,8 @@ void main() async {
         '/user_panel': (context) => UserPanel(),
         '/driver_navigate': (context) => DriverNavigation(),
         '/about_us': (context) => AboutUs(),
+        '/admin_panel': (context) => AdminPanel(),
+        '/user_list': (context) => UserListTable(),
       },
     ));
   } catch (e) {

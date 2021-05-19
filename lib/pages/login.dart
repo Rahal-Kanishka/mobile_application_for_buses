@@ -87,6 +87,8 @@ class _LoginState extends State<Login> {
                                 this.navigateToDriverHome();
                               } else if(value[2]['type']['name'] == 'General') {
                                 this.navigateToUserPanel();
+                              } else if(value[2]['type']['name'] == 'Admin') {
+                                this.navigateToAdminPanel();
                               } else {
                                 this.navigateToWelcome();
                               }
@@ -149,5 +151,9 @@ class _LoginState extends State<Login> {
 
   void navigateToUserPanel(){
     Navigator.pushNamed(context, '/user_panel');
+  }
+
+  void navigateToAdminPanel(){
+    Navigator.pushNamed(context, '/admin_panel');
   }
 }
