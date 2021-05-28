@@ -2,31 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_with_maps/common/user_session.dart';
+import 'package:flutter_with_maps/models/Driver.dart';
 import 'package:flutter_with_maps/models/DriverProfile.dart';
 import 'package:flutter_with_maps/models/user.dart';
 import 'package:flutter_with_maps/util/backend.dart';
 import 'package:http/http.dart' as http;
 import 'package:global_configuration/global_configuration.dart';
-
-class Driver {
-  String userName;
-  String name;
-  int age;
-  String nationality;
-  String rating;
-  int trips;
-
-  Driver(Map<String, dynamic> data) {
-    if (data != null) {
-      this.userName = data['userName'];
-      this.name = data['name'];
-      this.age = data['age'] as int;
-      this.nationality = data['nationality'];
-      this.rating = data['rating'];
-      this.trips = data['trips'] as int;
-    }
-  }
-}
 
 class DriverHome extends StatefulWidget {
   @override

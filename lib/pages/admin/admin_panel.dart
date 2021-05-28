@@ -43,7 +43,9 @@ class _AdminPanelState extends State<AdminPanel> {
     Card usersCard = getCard('All Users', Icons.supervised_user_circle_outlined, ()=> {
       Navigator.pushNamed(context, '/user_list')
     });
-    Card driversCard = getCard('Drivers By Route', Icons.directions_bus, ()=> {  print(' drivers')});
+    Card driversCard = getCard('Drivers By Route', Icons.directions_bus, ()=> {
+      Navigator.pushNamed(context, '/driver_list')
+    });
     Card complaintsCard = getCard('Complaints', Icons.comment_bank, ()=> {  print('complaints')});
     cardList.addAll([usersCard, driversCard, complaintsCard]);
     return cardList;

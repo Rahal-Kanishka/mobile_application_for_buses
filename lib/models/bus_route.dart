@@ -44,12 +44,16 @@ class BusRoute {
           json['_id'] as String,
           json['name'] as String,
           json['number'] as String,
-          LatLng(json['start_location']['lat'],json['start_location']['lng']),
-          LatLng(json['end_location']['lat'],json['end_location']['lng']),
+          json['start_location'] != null
+              ? LatLng(
+                  json['start_location']['lat'], json['start_location']['lng'])
+              : null,
+          json['end_location'] != null
+              ? LatLng(json['end_location']['lat'], json['end_location']['lng'])
+              : null,
           1,
           Trip.fromJson(json['first_trip']),
-          Trip.fromJson(null)
-      );
+          Trip.fromJson(null));
     } else {
       return BusRoute(null, null, null, null, null, null, null, null);
     }
