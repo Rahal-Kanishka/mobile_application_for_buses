@@ -177,7 +177,14 @@ class _UserPanel extends State<UserPanel> {
                   onTap: () => Navigator.pushNamed(context, '/register'),
                   label: 'Register',
                   labelStyle: TextStyle(fontWeight: FontWeight.w500),
-                  labelBackgroundColor: Colors.redAccent[200])
+                  labelBackgroundColor: Colors.redAccent[200]),
+              SpeedDialChild(
+                  child: Icon(Icons.settings, color: Colors.white),
+                  backgroundColor: Colors.green,
+                  onTap: () => Navigator.pushNamed(context, '/complaint'),
+                  label: 'Complaints',
+                  labelStyle: TextStyle(fontWeight: FontWeight.w500),
+                  labelBackgroundColor: Colors.green)
             ]));
   }
 }
