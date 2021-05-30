@@ -20,6 +20,7 @@ import 'package:flutter_with_maps/pages/driver/driver_navigate.dart';
 import 'package:flutter_with_maps/pages/login.dart';
 import 'package:flutter_with_maps/pages/register.dart';
 import 'package:flutter_with_maps/pages/user/userPanel.dart';
+import 'package:flutter_with_maps/pages/user/user_complaints_list.dart';
 import 'package:flutter_with_maps/pages/user_profile.dart' as UserProfile;
 import 'package:flutter_with_maps/pages/welcome.dart';
 import 'package:flutter_with_maps/util/backend.dart';
@@ -48,6 +49,7 @@ void main() async {
         '/driver': (context) => DriverHome(),
         '/complaint': (context) => Complaint(),
         '/all_complaint_list': (context) => AllComplaintListTable(),
+        '/user_complaint_list': (context) => UserComplaintListTable(),
         '/user': (context) => UserProfile.UserProfile(),
         '/login': (context) => Login(),
         '/register': (context) => Register(),
