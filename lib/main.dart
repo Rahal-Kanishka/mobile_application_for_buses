@@ -10,6 +10,7 @@ import 'package:flutter_with_maps/models/DriverProfile.dart';
 import 'package:flutter_with_maps/models/user.dart';
 import 'package:flutter_with_maps/pages/about_us.dart';
 import 'package:flutter_with_maps/pages/admin/admin_panel.dart';
+import 'package:flutter_with_maps/pages/admin/all_complaints_list.dart';
 import 'package:flutter_with_maps/pages/admin/drivers_by_route.dart';
 import 'package:flutter_with_maps/pages/admin/user_list_table.dart';
 import 'package:flutter_with_maps/pages/bus_selection.dart';
@@ -46,6 +47,7 @@ void main() async {
         '/welcome': (context) => Welcome(),
         '/driver': (context) => DriverHome(),
         '/complaint': (context) => Complaint(),
+        '/all_complaint_list': (context) => AllComplaintListTable(),
         '/user': (context) => UserProfile.UserProfile(),
         '/login': (context) => Login(),
         '/register': (context) => Register(),

@@ -17,44 +17,49 @@ class _ComplaintState extends State<Complaint> {
         title: Text('User Complaints'),
         centerTitle: true,
       ),
-      body: Builder(
-          builder: (BuildContext buildContext) {
-           return Container(
-              alignment: Alignment.center,
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  TextField(
-                    maxLines: 2,
-                    decoration: InputDecoration.collapsed(
-                        hintText: "Enter your complaint heading..",
-                        border: OutlineInputBorder()),
-                    onChanged: (String value) {
-                      this.complaintTitle = value;
-                    },
-                  ),
-                  TextField(
-                    maxLines: 8,
-                    decoration: InputDecoration.collapsed(
-                        hintText: "Enter your complaint here..",
-                        border: OutlineInputBorder()),
-                    onChanged: (String value) {
-                      this.complaint = value;
-                    },
-                  ),
-                  RaisedButton(
-                      color: Colors.blue[200],
-                      child: Text('Submit'),
-                      onPressed: () {
-                        this.saveComplaint().then((value) {
-                          final snackBar = SnackBar(content: Text(value));
-                          Scaffold.of(buildContext).showSnackBar(snackBar);
-                        });
-                      })
-                ],
+      body: Builder(builder: (BuildContext buildContext) {
+        return Container(
+          alignment: Alignment.center,
+          color: Colors.white,
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: new EdgeInsets.all(10.0),
+                child: TextField(
+                  maxLines: 2,
+                  decoration: InputDecoration.collapsed(
+                      hintText: "Enter your complaint heading..",
+                      border: OutlineInputBorder()),
+                  onChanged: (String value) {
+                    this.complaintTitle = value;
+                  },
+                ),
               ),
-            );
-          }),
+              Container(
+                padding: new EdgeInsets.all(10.0),
+                child: TextField(
+                  maxLines: 8,
+                  decoration: InputDecoration.collapsed(
+                      hintText: "Enter your complaint here..",
+                      border: OutlineInputBorder()),
+                  onChanged: (String value) {
+                    this.complaint = value;
+                  },
+                ),
+              ),
+              RaisedButton(
+                  color: Colors.blue[200],
+                  child: Text('Submit'),
+                  onPressed: () {
+                    this.saveComplaint().then((value) {
+                      final snackBar = SnackBar(content: Text(value));
+                      Scaffold.of(buildContext).showSnackBar(snackBar);
+                    });
+                  })
+            ],
+          ),
+        );
+      }),
     );
   }
 
@@ -66,7 +71,7 @@ class _ComplaintState extends State<Complaint> {
       'user_id': UserSession().currentUser.id
     };
     BackEndResult result =
-    await BackEnd.postRequest(dataObject, '/complaint/add_complaint');
+        await BackEnd.postRequest(dataObject, '/complaint/add_complaint');
 
     if (result != null && result.statusCode == 200) {
       display = 'Complaint Recorded Successfully';
