@@ -75,6 +75,7 @@ class _UserPanel extends State<UserPanel> {
                         splashColor: Colors.blue.withAlpha(30),
                         onTap: () {
                           print('Card tapped.');
+                          Navigator.pushNamed(context, '/favourite_list');
                         },
                         child: Container(
                           width: 300,

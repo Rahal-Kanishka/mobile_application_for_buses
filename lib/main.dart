@@ -19,6 +19,7 @@ import 'package:flutter_with_maps/pages/driver/driver_home.dart';
 import 'package:flutter_with_maps/pages/driver/driver_navigate.dart';
 import 'package:flutter_with_maps/pages/login.dart';
 import 'package:flutter_with_maps/pages/register.dart';
+import 'package:flutter_with_maps/pages/user/uer_favourite_list.dart';
 import 'package:flutter_with_maps/pages/user/userPanel.dart';
 import 'package:flutter_with_maps/pages/user/user_complaints_list.dart';
 import 'package:flutter_with_maps/pages/user_profile.dart' as UserProfile;
@@ -30,6 +31,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission/permission.dart';
 import 'package:http/http.dart' as http;
 import 'package:global_configuration/global_configuration.dart';
+import 'package:progress_indicator_button/progress_button.dart';
 
 import 'common/basic_alert.dart';
 import 'models/bus_route.dart';
@@ -60,6 +62,7 @@ void main() async {
         '/admin_panel': (context) => AdminPanel(),
         '/user_list': (context) => UserListTable(),
         '/driver_list': (context) => DriversByRouteTable(),
+        '/favourite_list': (context) => UserFavouriteListTable(),
       },
     ));
   } catch (e) {
@@ -415,29 +418,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             shrinkWrap: true,
             children: <Widget>[
               Column(
-                children: [
-                  ListTile(
-                    leading: new Icon(Icons.person),
-                    title: new Text(driverUser.firstName + ' ' + driverUser.lastName),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: new Icon(Icons.star),
-                    title: new Text(driverProfile.rating),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: new Icon(Icons.card_travel),
-                    title: new Text(driverProfile.trips.toString()),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
+                children: getDriverDetailsWidgets(driverUser, context, driverProfile),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -460,6 +441,54 @@ class _HomeWidgetState extends State<HomeWidget> {
         );
       },
     );
+  }
+
+  List<Widget> getDriverDetailsWidgets(
+      User driverUser, BuildContext context, DriverProfile driverProfile) {
+    List<Widget> listItems = new List();
+    listItems.addAll([
+      ListTile(
+        leading: new Icon(Icons.person),
+        title: new Text(driverUser != null
+            ? driverUser.firstName + ' ' + driverUser.lastName
+            : 'N/A'),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      ),
+      ListTile(
+        leading: new Icon(Icons.star),
+        title: new Text(driverUser != null && driverProfile.rating != null
+            ? driverProfile.rating
+            : 'N/A'),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      ),
+      ListTile(
+        leading: new Icon(Icons.card_travel),
+        title: new Text(driverUser != null && driverProfile.trips != null
+            ? driverProfile.trips.toString()
+            : 'N/A'),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      ),
+    ]);
+    // if the user is logged in, show button to add to favourite
+    if(UserSession().isLoggedIn == true) {
+      listItems.add(
+        Container(
+          child: ProgressButton(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              strokeWidth: 2,
+              color: Colors.blue[200],
+              child: Text('Add to Favourite')
+          ),
+        )
+      );
+    }
+    return listItems;
   }
 
   /// get speedDials based on user authentication details
